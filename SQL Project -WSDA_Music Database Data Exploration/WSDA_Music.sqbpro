@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/Zamisa/Downloads/WSDA_Music.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="3930"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,5:mainAlbum"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="Album" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="61"/><column index="2" value="219"/><column index="3" value="59"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Artist" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="59"/><column index="2" value="147"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Customer" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="83"/><column index="2" value="71"/><column index="3" value="83"/><column index="4" value="294"/><column index="5" value="264"/><column index="6" value="132"/><column index="7" value="44"/><column index="8" value="96"/><column index="9" value="80"/><column index="10" value="128"/><column index="11" value="122"/><column index="12" value="183"/><column index="13" value="98"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Employee" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="82"/><column index="2" value="71"/><column index="3" value="71"/><column index="4" value="124"/><column index="5" value="75"/><column index="6" value="129"/><column index="7" value="129"/><column index="8" value="178"/><column index="9" value="67"/><column index="10" value="44"/><column index="11" value="60"/><column index="12" value="80"/><column index="13" value="115"/><column index="14" value="115"/><column index="15" value="168"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="Invoice" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="68"/><column index="2" value="83"/><column index="3" value="129"/><column index="4" value="264"/><column index="5" value="132"/><column index="6" value="80"/><column index="7" value="96"/><column index="8" value="116"/><column index="9" value="53"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="InvoiceLine" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="94"/><column index="2" value="68"/><column index="3" value="56"/><column index="4" value="65"/><column index="5" value="64"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">/*
+ CREATED BY: Ndabenhle Zamisa
+ CREATE DATE: 07/07/2023
+ DESCRIPTION: Basic Query Structure
+*/</sql><sql name="SQL 3">/*
+CREATED BY: Ndabenhle Nqubeko Zamisa
+CREATE DATE: 07/08/2023
+DESCRIPTION: This query displyas customers first &amp; last name, &amp; email addresses
+*/
+
+SELECT 
+  FirstName AS [Customer Last Name],
+  LastName AS [Customer Last Name],/* You use single quote marks instead of square brackets*/
+  Email AS EMAIL /*You don't need any square brackets/qoute marks since it's one word*/
+FROM 
+ Customer
+ORDER BY 
+  LastName ASC,/* Use DESC/ASC to sort it in ascending/descending order*/
+  FirstName DESC 
+LIMIT 10
+</sql><sql name="SQL 4">--Customers that purchased two songs at $0.99
+/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/10/2023
+Description: Customers that purchased two songs at $0.99
+*/
+-- % is a wild card character (I don't care what comes after)
+
+
+SELECT
+   InvoiceDate,
+   BillingAddress,
+   BillingCity,
+  total
+FROM
+ Invoice
+WHERE
+ total &gt; 1.98 AND (BillingCity LIKE 'P%' OR BillingCity LIKE 'D%')
+ORDER BY
+  InvoiceDate
+ 
+</sql><sql name="SQL 5">/* 
+WSDA MUSIC Sales Goals:
+They want as many customers to spend between $7.00 and $15.00 
+
+ Sales Categories
+Baseline Purchase - Betwen $0.99 and $1.99
+Low Purchase - Between $2.00 and $6.99
+Target Purchase - Between $7.00 and $15.00
+Top Performer - Above $15.00
+*/
+SELECT
+   InvoiceDate,
+   BillingAddress,
+   BillingCity,
+  total,
+  CASE
+  WHEN total &lt; 2.00 THEN 'Baseline Purchase'
+  WHEN total BETWEEN 2.00 AND 6.99 THEN 'Low Purchase'
+  WHEN total BETWEEN 7.00 AND 15.00 THEN 'Target Purchase'
+  WHEN total &gt;15.00 THEN 'Top Performer' /* or you can use (ELSE 'Top Performer') instead of (WHEN total &gt;15.00 THEN 'Top Performer')*/
+  END as PurchaseType
+FROM
+ Invoice
+WHERE
+ PurchaseType = 'Top Performer' /* or (total &gt; 15.00) */
+ORDER BY
+  BillingCity</sql><sql name="SQL 6">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/10/2023
+Description: Joins
+*/
+
+SELECT
+  c.FirstName /*same as (Customer.FirstName)*/,
+  c.LastName /*same as (Customer.LastName)*/,
+  i.InvoiceId /*same as (Invoice.InvoiceId)*/,
+  i.CustomerId /*same as (Invoice.CustomerId)*/,
+  i.InvoiceDate /*same as (Invoice.InvoiceDate)*/,
+  i.total /*same as (Invoice.Total)*/
+FROM
+  Invoice AS i /*Or just write Invoice no need to alias*/
+INNER JOIN
+  Customer AS c /*Or just write Customer no need to alias*/
+ON
+  i.CustomerId = c.CustomerId /*same as (Invoice.CustomerId = Customer.CustomerId)*/
+ORDER BY
+  c.CustomerId /*same as (Customer.CustomerId)*/</sql><sql name="SQL 7">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/10/2023
+Description: Join more than 2 table|| what employees are responsible for the 10 highest individual sales
+*/
+
+SELECT
+ e.EmployeeId,
+ e.FirstName,
+ e.LastName,
+ c.FirstName,
+ c.LastName,
+ c.SupportRepId,
+ i.CustomerId,
+ i.total
+FROM
+ Invoice AS i
+INNER JOIN
+ Customer AS c 
+ON
+ i.CustomerId = c.CustomerId
+INNER JOIN
+ Employee AS e
+ON
+ c.SupportRepId = e.EmployeeId
+ ORDER BY
+ i.total DESC
+LIMIT 10</sql><sql name="SQL 8">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/10/2023
+Description: Create a mailing list to USA Customers (Functions)
+*/
+
+SELECT
+ FirstName,
+ LastName,
+ Address,
+ FirstName || ' ' || LastName || ' ' || Address || ', ' || City || ' ' || State || ' ' || PostalCode AS [Mailing Address],
+ length(postalcode),
+ substr(postalcode,1,5) AS [5 Digits Postal Code]
+FROM
+ Customer
+WHERE
+ Country = 'USA'
+</sql><sql name="SQL 9">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/10/2023
+Description: Calculte the ages of all employees (DATE AND TIME Function)
+*/
+
+SELECT
+ FirstName,
+ LastName,
+ BirthDate,
+ strftime('%Y-%m-%d',BirthDate) AS [BirthDate no Time code],
+ strftime('%Y-%m-%d','now') - strftime('%Y-%m-%d',BirthDate) AS [Age]
+FROM
+ Employee
+ORDER BY
+ Age </sql><sql name="SQL 10">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/10/2023
+Description: What are our all time global sales (Aggregate and NESTING Function)
+WE first used the Aggregate functions to fine SUM,AVG,MAX,MIN,and COUNT then we nested them together
+*/
+
+SELECT
+ SUM(total) AS [Total Sales],
+ ROUND(AVG(total),2) AS [Average Sales],/*ROUND funtion is a nesting function*/
+ Max(total) AS [Maximum Sales],
+ MIN(total) AS [Minimun Sales],
+ COUNT(*) AS [Total Count ] 
+FROM
+ Invoice</sql><sql name="SQL 11">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: SQL Groupings || What are the averages invoices totals by city?
+*/
+SELECT
+ BillingCity,
+ ROUND (avg(total),2) AS [Averages Invoices Totals By City]
+FROM
+ Invoice
+WHERE
+ BillingCity LIKE 'L%'
+GROUP BY
+ BillingCity
+ORDER BY
+ BillingCity</sql><sql name="SQL 12">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: SQL Groupings || What are the averages invoices totals greater than $5.00 for cities starting with B?
+*/
+
+SELECT
+ BillingCity,
+ round(AVG(total),2) AS [Averages Invoices Totals By City]
+FROM
+ Invoice
+WHERE /*cities starting with B*/
+ BillingCity LIKE 'B%'
+GROUP BY
+ BillingCity
+HAVING /*greater than $5.00*/
+ avg(total) &gt; 5.00
+ORDER BY
+ BillingCity</sql><sql name="SQL 13">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: SQL Groupings || What are the averages invoices totals by BillingCountry and city (Grouping by many fields)
+*/
+
+SELECT
+ BillingCountry,
+ BillingCity,
+ round(AVG(total),2) AS [averages invoices totals by BillingCountry and city]
+FROM
+ Invoice
+GROUP BY
+ BillingCountry,
+ BillingCity
+ORDER BY
+ BillingCountry</sql><sql name="SQL 14">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: Subqueries || Gather date about invoices that are less than this average
+*/
+
+SELECT
+ InvoiceDate,
+ BillingAddress,
+ BillingCity,
+ total
+FROM
+ Invoice
+WHERE
+ total &lt;
+   (SELECT round(AVG(total),2) AS [Average Total] 
+    FROM Invoice)  /*This is a SELECT Subquery*/ 
+ORDER BY
+ total DESC</sql><sql name="SQL 15">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: SELECT Subqueries || How is each individual city performing againt the global average
+*/
+
+SELECT
+ BillingCity,
+ ROUND(AVG(total),2) AS [City Average],
+ (SELECT round(AVG(total),2) AS [Global Average] 
+ FROM Invoice) /*This is a SELECT Subquery*/
+FROM
+ Invoice
+GROUP BY
+ BillingCity 
+ORDER BY
+ BillingCity</sql><sql name="SQL 16">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: Subqueries without agregate functions 
+*/
+SELECT
+ InvoiceDate,
+ BillingAddress,
+ BillingCity
+FROM
+ Invoice
+WHERE
+ InvoiceDate &gt;
+(SELECT
+ InvoiceDate
+FROM
+ Invoice
+WHERE
+ InvoiceId = 251)</sql><sql name="SQL 17">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: Returning multiple values from a subquery
+*/
+SELECT
+ InvoiceDate,
+ BillingAddress,
+ BillingCity
+FROM
+ Invoice
+WHERE
+ InvoiceDate IN /*IN Clause subquery */
+(SELECT
+ InvoiceDate
+FROM
+ Invoice
+WHERE
+ InvoiceId IN (251, 252, 254))</sql><sql name="SQL 18">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: Subqueries and DISTINCT | Which tracks are not selling
+*/
+SELECT
+ TrackId,
+ Composer,
+ Name
+FROM 
+ Track
+WHERE
+ TrackId
+NOT IN
+ (SELECT 
+ DISTINCT /*DISTINCT Subquery*/
+ TrackId
+FROM
+ InvoiceLine
+ORDER BY 
+ TrackId)</sql><sql name="SQL 19">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: Ceating VIEWS
+*/
+
+CREATE VIEW V_AvrgTotal AS
+SELECT
+ round(AVG(total),2) AS [Average Total] 
+FROM
+ Invoice
+ </sql><sql name="SQL 20">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: Views and JOINS
+*/
+
+CREATE VIEW V_Track_InvoiceLine_Join AS
+SELECT
+ il.InvoiceId,
+ il.UnitPrice,
+ il.Quantity,
+ t.Name,
+ t.Composer,
+ t.Milliseconds
+ FROM
+ InvoiceLine AS il
+INNER JOIN
+ Track AS t
+ON
+ il.TrackId = t.TrackId</sql><sql name="SQL 21">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: Inserting DATA || DML
+*/
+
+INSERT INTO
+ Artist (Name)
+VALUES ('Bob Marley')</sql><sql name="SQL 22">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: Updating DATA | DML
+*/
+
+UPDATE 
+ Artist
+SET Name = 'Damien Marley' 
+WHERE
+ ArtistId = 276 /*WIthout the where clause all artist names in the DATABASE where going to be updated to 'Damien Marley'*/</sql><sql name="SQL 23">/*
+Created By: Ndabenhle Nqubeko Zamisa
+Create Date: 07/11/2023
+Description: Deleting DATA | DML
+*/
+
+DELETE FROM
+ Artist
+WHERE
+ ArtistId = 276 /*WIthout the where clause it will delete every record in the Artist table'*/</sql><sql name="SQL 24">/*
+Challenge 1 - General Queries that begin to give to some HIGH-LEVEL Context
+1.        How Many transactions took place between the years 2011-2012?
+2.        How much money did WSDA Music make during the same Period?
+*/
+
+/*1.  How Many transactions took place between the years 2011-2012?*/
+SELECT
+ COUNT(*)
+FROM
+ Invoice
+WHERE
+ InvoiceDate &gt;= &quot;2011-01-01&quot; AND InvoiceDate &lt;= &quot;2012-12-31&quot;
+
+ 
+ 
+ 
+ /*2.        How much money did WSDA Music make during the same Period?*/
+ SELECT
+ SUM(tota)
+FROM
+ Invoice
+WHERE
+ InvoiceDate &gt;= &quot;2011-01-01&quot; AND InvoiceDate &lt;= &quot;2012-12-31&quot;
+ </sql><sql name="SQL 25">/*
+Challenge 2 - More Targeted Questions That Query The Tables Containing Data About Customers And Employees
+1.        Get A list of Customers who made purchases between 2011 - 2012?
+2.        Get A List Of Customers, Sales Rep, total transaction amounts for each customer between 2011-2012?
+3.        How many transactions are above the average transaction amount during the same time?
+4.        What was the average transaction amount for each year that WSDA Music Co has been in Business?
+*/
+
+/*1.        Get A list of Customers who made purchases between 2011 - 2012?*/
+SELECT
+ c.FirstName,
+ c.LastName,
+ i.total
+FROM
+ Invoice AS i
+INNER JOIN
+ Customer AS c
+ON
+ i.CustomerId = c.CustomerId
+WHERE
+ InvoiceDate &gt;= &quot;2011-01-01&quot; AND InvoiceDate &lt;= &quot;2012-12-31&quot;
+ORDER BY
+ i.total DESC 
+ 
+/*2.        Get A List Of Customers, Sales Rep, total transaction amounts for each customer between 2011-2012?*/
+SELECT
+ c.FirstName AS [Customer FN],
+ c.LastName AS [Customer LN],
+ e.FirstName AS [Employee FN],
+ e.LastName AS [Employee LN],
+ i.total
+FROM
+ Invoice AS i
+INNER JOIN
+ Customer AS c
+ON
+ i.CustomerId = c.CustomerId
+INNER JOIN
+ Employee AS e
+ON
+ c.SupportRepId = e.EmployeeId
+WHERE
+ InvoiceDate &gt;= &quot;2011-01-01&quot; AND InvoiceDate &lt;= &quot;2012-12-31&quot;
+ ORDER BY
+ i.total DESC 
+ 
+ 
+ /*3.        How many transactions are above the average transaction amount during the same time?*/
+SELECT
+ round(AVG(total),2) AS [AVG TRANSACTION Amount]
+FROM
+ Invoice
+WHERE
+ InvoiceDate &gt;= &quot;2011-01-01&quot; AND InvoiceDate &lt;= &quot;2012-12-31&quot;
+ 
+ /* Get the number of transaction above the average transaction amount*/
+SELECT
+ count(total) AS [NUM OF TRANSACTION AABOVE THE AVG Amount]
+FROM
+ Invoice
+WHERE
+ total &gt; 
+ (SELECT
+ round(AVG(total),2) AS [AVG TRANSACTION Amount]
+FROM
+ Invoice
+ WHERE
+ InvoiceDate &gt;= &quot;2011-01-01&quot; AND InvoiceDate &lt;= &quot;2012-12-31&quot;)
+AND 
+ InvoiceDate &gt;= &quot;2011-01-01&quot; AND InvoiceDate &lt;= &quot;2012-12-31&quot;
+ 
+
+/*4.        What was the average transaction amount for each year that WSDA Music Co has been in Business?*/
+
+SELECT
+ round(AVG(total),2) AS [ Avg Transaction Amount],
+ strftime('%Y',InvoiceDate) AS [Year]
+FROM
+ Invoice
+GROUP BY
+  strftime('%Y',InvoiceDate)</sql><sql name="SQL 26">/*
+Challenge 3 - QUERIES TAH PERFORM IN DEPTH ANALYSIS WITH THE AIM OF FINDING EMPLOYEES WHO MAY HAVE BEEN FINANCIALLY MOTIVATED TO COMMIT THE CRIME
+1.        Get A list of Employees who exceeded the average transaction amount from sales they generated during 2011-2012?
+2.        Creat a commission payout column that displays each Employee's commission based on 15% of the sales transaction amount?
+3.        Which Employee has the highest commission?
+4.        List the customers that were served by the employee identified in the last question?
+5.        Which customer made the highest purchase?
+6.        Look at this customer recent record, see anything suspicous?
+7.        Who can you conclude is our primary person of interest?
+*/
+
+
+/*1.        Get A list of Employees who exceeded the average transaction amount from sales they generated during 2011-2012?*/
+SELECT
+ e.FirstName,
+ e.LastName,
+ sum(total) AS [Total Sales]
+FROM
+ Invoice AS i
+INNER JOIN
+ Customer AS c
+ON
+ i.CustomerId = c.CustomerId
+INNER JOIN
+ Employee AS e
+ON
+ c.SupportRepId = e.EmployeeId
+WHERE
+ InvoiceDate &gt;= &quot;2011-01-01&quot; AND InvoiceDate &lt;= &quot;2012-12-31&quot;
+AND 
+ i.total &gt; 11.66
+GROUP BY
+ e.FirstName,
+ e.LastName
+ORDER BY
+ e.LastName
+ 
+/*2.        Creat a commission payout column that displays each Employee's commission based on 15% of the sales transaction amount?*/
+SELECT
+ e.FirstName,
+ e.LastName,
+ sum(total) AS [Total Sales],
+ round(sum(i.total)*.15,2) AS [Commission Payout]
+FROM
+ Invoice AS i
+INNER JOIN
+ Customer AS c
+ON
+ i.CustomerId = c.CustomerId
+INNER JOIN
+ Employee AS e
+ON
+ c.SupportRepId = e.EmployeeId
+WHERE
+ InvoiceDate &gt;= &quot;2011-01-01&quot; AND InvoiceDate &lt;= &quot;2012-12-31&quot;
+AND 
+ i.total &gt; 11.66
+GROUP BY
+ e.FirstName,
+ e.LastName
+ORDER BY
+ e.LastName DESC
+ 
+ 
+/*3.        Which Employee has the highest commission?
+  - Jane Peacock
+*/
+
+
+/*4.        List the customers that were served by the employee identified in the last question?*/
+SELECT
+ e.FirstName,
+ e.LastName,
+ c.FirstName,
+ c.LastName,
+ sum(total) AS [Total Sales],
+ round(sum(i.total)*.15,2) AS [Commission Payout]
+FROM
+ Invoice AS i
+INNER JOIN
+ Customer AS c
+ON
+ i.CustomerId = c.CustomerId
+INNER JOIN
+ Employee AS e
+ON
+ c.SupportRepId = e.EmployeeId
+WHERE
+ InvoiceDate &gt;= &quot;2011-01-01&quot; AND InvoiceDate &lt;= &quot;2012-12-31&quot;
+AND 
+ e.LastName = 'Peacock'
+GROUP BY
+ e.FirstName,
+ e.LastName,
+ c.FirstName,
+ c.LastName
+ORDER BY
+ [Total Sales] DESC
+ 
+
+/*5.        Which customer made the highest purchase?
+  - John Doeein
+*/
+
+/*6. Look at this customer recent record, see anything suspicous?*/
+
+SELECT
+  *
+FROM
+ Customer AS c
+WHERE
+ c.LastName = 'Doeein'
+
+/*7.        Who can you conclude is our primary person of interest?
+  - John Peacock
+*/
+</sql><current_tab id="22"/></tab_sql></sqlb_project>
